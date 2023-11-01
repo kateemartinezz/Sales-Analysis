@@ -147,5 +147,37 @@ plt.show()
 
 
 ### What US City had the highest number of sales ###
+#add a city column with the .apply method
+def get_city(address):
+    return address.split(',')[1]
 
+def get_state(address):
+    return address.split(',')[2].split(' ')[1]
+
+
+New_data['City'] = New_data['Purchase Address'].apply(lambda x: f'{get_city(x)}  ({get_state(x)})')
+New_data.head(5)
+
+New_data.drop(columns = 'CityData', inplace = True)
+
+### What US City had the highest number of sales ###
+CityData = New_data.drop(columns = 'Order Date', inplace = True)
+CityData = New_data.groupby('City').sum()
+CityData
+
+##insert matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+
+# MonthYear = range(1,14)
+# bar_plot = plt.bar(MonthYear,TotalSalesPerMonth['Total Sales'])
+cities = [city for city, df in CityData.groupby('City')]
+
+# cities.set_index('City')['Total Sales'].plot(kind = 'bar')
+
+plt.bar(cities, CityData['Total Sales'])
+plt.xticks(cities, rotation = 'vertical', size = 11)
+plt.xlabel('City State')
+plt.ylabel('Total Sales')
+plt.title('City with the Highest Sales')
+plt.show()
 
